@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Border Hopper - Cinematic Ribbon Edition</title>
+    <link rel="stylesheet" href="gemini-game.css?v=28">
+</head>
+<body>
+
+
+    <!-- HUD -->
+    <div id="ui-layer">
+        <div id="score">SCORE: 0.0s</div>
+        <div id="level">LEVEL: 1 (HELL MODE)</div>
+    </div>
+
+    <!-- Currency bar (shown on menus) -->
+    <div id="currency-bar"><span id="coin-amt">🪙 0</span><span id="shard-amt">💎 0</span></div>
+
+    <!-- 0. Login Screen -->
+    <div id="login-screen" class="screen">
+        <h1>BORDER HOPPER</h1>
+        <p style="color: #888; font-weight: bold; letter-spacing: 1px; margin-bottom: 14px;">Sign in to play</p>
+        <input type="text" id="login-user" placeholder="Username" maxlength="12" autocomplete="off">
+        <input type="password" id="login-pass" placeholder="Password" maxlength="20" autocomplete="off">
+        <div id="login-msg" style="color:#ff6688;min-height:18px;font-size:14px;margin-bottom:6px;"></div>
+        <div class="btn-group">
+            <button id="btn-login" class="btn-green btn-wide">LOGIN</button>
+            <button id="btn-signup" class="btn-blue btn-wide">SIGN UP</button>
+        </div>
+    </div>
+
+    <!-- 1. Start Screen -->
+    <div id="start-screen" class="screen hidden">
+        <h1>BORDER HOPPER</h1>
+        <p id="welcome-line" style="color: #888; font-weight: bold; letter-spacing: 1px; margin-bottom: 10px;">🔥 HELLFIRE UPDATE 🔥</p>
+        <input type="text" id="username-input" placeholder="Nickname (Max 8)" maxlength="8" autocomplete="off">
+
+        <div class="btn-group">
+            <button id="btn-start" class="btn-green btn-wide">START GAME</button>
+            <div class="row-group">
+                <button id="btn-main-shop" class="btn-blue btn-half">SKINS</button>
+                <button id="btn-main-edit" class="btn-purple btn-half">EDIT</button>
+            </div>
+            <button id="btn-main-box" class="btn-gold btn-wide">📦 BOX & SHOP</button>
+            <button id="btn-logout" class="btn-back" style="margin-top:8px;">LOGOUT</button>
+        </div>
+    </div>
+
+    <!-- 2. Game Over Screen -->
+    <div id="game-over-screen" class="screen hidden">
+        <h1 id="game-over-title">WASTED</h1>
+        <div id="final-score">Survived: 0.0s</div>
+        
+        <div class="ranking-box">
+            <div class="ranking-title">🏆 LEADERBOARD (Top 5)</div>
+            <div id="ranking-list"></div>
+        </div>
+        
+        <div id="reward-line" style="color:#ffd23f;font-weight:bold;margin-bottom:14px;"></div>
+
+        <div class="btn-group">
+            <button id="btn-restart" class="btn-green btn-wide">PLAY AGAIN</button>
+            <div class="row-group">
+                <button id="btn-dead-shop" class="btn-blue btn-half">SKINS</button>
+                <button id="btn-dead-edit" class="btn-purple btn-half">EDIT</button>
+            </div>
+            <button id="btn-dead-box" class="btn-gold btn-wide">📦 BOX & SHOP</button>
+        </div>
+    </div>
+
+    <!-- 3. Skin Shop Screen -->
+    <div id="skin-screen" class="screen hidden">
+        <h1>SELECT SKIN</h1>
+        <p style="color: #aaa; margin-bottom: 10px;">Choose your special featured Slime</p>
+        <div class="skin-container" id="skin-container"></div>
+        <button id="btn-back-skin" class="btn-back">BACK</button>
+    </div>
+
+    <!-- 4. Edit Effects Screen -->
+    <div id="edit-screen" class="screen hidden">
+        <h1>CUSTOMIZE EFFECTS</h1>
+        <p style="color: #aaa; margin-bottom: 15px;">Equip your Trails and Death Impacts</p>
+        
+        <div class="edit-layout">
+            <div class="edit-section">
+                <div class="section-title">Death Effect</div>
+                <div class="grid-options" id="die-effects-grid"></div>
+            </div>
+
+            <div class="edit-section">
+                <div class="section-title">Trail Ribbon</div>
+                <div class="grid-options" id="trails-grid"></div>
+            </div>
+        </div>
+
+        <button id="btn-back-edit" class="btn-back">SAVE & BACK</button>
+    </div>
+
+    <!-- 5. Box & Shop Screen -->
+    <div id="shop-screen" class="screen hidden">
+        <h1>BOX &amp; SHOP</h1>
+        <div class="shop-layout">
+            <div class="box-area">
+                <div class="box-card" data-cat="skin">
+                    <div class="box-img">🎁</div>
+                    <div class="box-name">Skin Box</div>
+                    <div class="box-price">500 🪙</div>
+                    <button class="btn-gold btn-openbox" data-cat="skin">OPEN</button>
+                </div>
+                <div class="box-card" data-cat="death">
+                    <div class="box-img">💀</div>
+                    <div class="box-name">Death Box</div>
+                    <div class="box-price">500 🪙</div>
+                    <button class="btn-gold btn-openbox" data-cat="death">OPEN</button>
+                </div>
+                <div class="box-card" data-cat="trail">
+                    <div class="box-img">🌀</div>
+                    <div class="box-name">Trail Box</div>
+                    <div class="box-price">500 🪙</div>
+                    <button class="btn-gold btn-openbox" data-cat="trail">OPEN</button>
+                </div>
+            </div>
+            <div class="panels-row">
+                <div class="mileage-area">
+                    <div class="mileage-title">💵 Buy Coins</div>
+                    <div class="mileage-list">
+                        <div class="mileage-row"><span>🪙 500</span><button class="btn-gold btn-buycoin" data-i="0">₩1,000</button></div>
+                        <div class="mileage-row"><span>🪙 1,000</span><button class="btn-gold btn-buycoin" data-i="1">₩1,900</button></div>
+                        <div class="mileage-row"><span>🪙 3,000</span><button class="btn-gold btn-buycoin" data-i="2">₩2,900</button></div>
+                    </div>
+                    <div style="color:#777;font-size:11px;margin-top:8px;text-align:center;">Simulated store (no real payment)</div>
+                </div>
+                <div class="mileage-area">
+                    <div class="mileage-title">💠 Mileage Shop</div>
+                    <div id="shop-container" class="mileage-list"></div>
+                </div>
+            </div>
+        </div>
+        <div id="box-reveal" class="box-reveal hidden"></div>
+        <button id="btn-back-shop" class="btn-back">BACK</button>
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <script src="g-core.js?v=28"></script>
+    <script src="g-obstacles.js?v=28"></script>
+    <script src="g-effects.js?v=28"></script>
+    <script src="g-main.js?v=28"></script>
+</body>
+</html>

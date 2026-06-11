@@ -1,0 +1,369 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+}
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #0b0b10;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* In-Game UI Layer */
+#ui-layer {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    pointer-events: none;
+    z-index: 5;
+}
+#level {
+    color: #ff3366;
+    margin-top: 5px;
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+
+/* Screen Layouts */
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(8, 8, 12, 0.97);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    z-index: 10;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+    overflow-y: auto;
+}
+/* 항목이 많아 화면을 넘칠 땐 위에서부터 쌓아 스크롤로 BACK 버튼까지 닿게 */
+#skin-screen, #edit-screen, #shop-screen {
+    justify-content: flex-start;
+    padding: 30px 0 50px;
+}
+.screen.hidden {
+    display: none !important;
+    opacity: 0;
+}
+
+h1 {
+    font-size: 46px;
+    margin-bottom: 5px;
+    letter-spacing: 3px;
+    text-shadow: 0 0 15px rgba(255, 0, 100, 0.3);
+}
+#game-over-title {
+    color: #ff2222;
+    text-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+}
+
+input[type="text"], input[type="password"] {
+    padding: 14px 20px;
+    font-size: 18px;
+    border: 2px solid #ff3366;
+    border-radius: 25px;
+    background-color: #1a1a24;
+    color: #fff;
+    text-align: center;
+    outline: none;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    width: 280px;
+}
+
+.btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+}
+.row-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    width: 100%;
+    max-width: 280px;
+    margin-bottom: 5px;
+}
+
+button {
+    padding: 14px 30px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+    text-align: center;
+}
+.btn-wide { width: 280px; }
+.btn-half { flex: 1; }
+.btn-green {
+    background-color: #ff3366;
+    box-shadow: 0 4px 15px rgba(255, 51, 102, 0.4);
+}
+.btn-green:hover {
+    background-color: #ff5588;
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(255, 85, 136, 0.6);
+}
+.btn-blue {
+    background-color: #0088cc;
+    box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
+}
+.btn-blue:hover {
+    background-color: #00aaff;
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 170, 255, 0.6);
+}
+.btn-gold {
+    background-color: #e6a817;
+    box-shadow: 0 4px 15px rgba(230, 168, 23, 0.4);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    letter-spacing: 0.5px;
+}
+.btn-gold:hover {
+    background-color: #ffc83d;
+    box-shadow: 0 6px 20px rgba(255, 200, 61, 0.6);
+    animation: btnbounce 0.4s;
+    transform: scale(1.05);
+}
+@keyframes btnbounce { 0% { transform: scale(1); } 35% { transform: scale(1.13); } 65% { transform: scale(0.97); } 100% { transform: scale(1.05); } }
+.btn-gold:disabled { background-color: #5a5230; cursor: default; transform: none; box-shadow: none; opacity: 0.7; }
+#currency-bar {
+    position: absolute;
+    top: 14px; right: 14px;
+    display: flex; gap: 10px;
+    z-index: 11; pointer-events: none;
+}
+#currency-bar span {
+    background: rgba(20,20,30,0.85);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 20px;
+    padding: 7px 14px;
+    font-weight: bold; font-size: 17px; color: #fff;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.9);
+    white-space: nowrap;
+}
+.skin-card.locked { opacity: 0.85; }
+.skin-card.locked .skin-preview-canvas { filter: grayscale(0.8) brightness(0.6); }
+
+/* Box & Shop */
+.shop-layout {
+    display: flex; flex-direction: column; gap: 18px;
+    align-items: center;
+    width: 94%; max-width: 720px; margin-bottom: 12px;
+}
+.box-area { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+.panels-row { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; align-items: flex-start; width: 100%; }
+.box-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px; padding: 14px; width: 130px;
+    display: flex; flex-direction: column; align-items: center; gap: 7px;
+}
+.box-img { font-size: 42px; line-height: 1; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); }
+.box-card[data-cat="skin"] { border-color: #ff66aa; }
+.box-card[data-cat="death"] { border-color: #ff5555; }
+.box-card[data-cat="trail"] { border-color: #8a2be2; }
+.box-name { font-weight: bold; font-size: 15px; }
+.box-price { color: #ffd23f; font-weight: bold; font-size: 14px; }
+.btn-openbox { width: 100%; padding: 10px 0; font-size: 14px; }
+.mileage-area {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px; padding: 14px; width: 250px;
+}
+.mileage-title { color: #7fd0ff; font-weight: bold; margin-bottom: 10px; text-align: center; font-size: 16px; }
+.mileage-list { display: flex; flex-direction: column; gap: 8px; max-height: 32vh; overflow-y: auto; }
+.mileage-row {
+    display: flex; justify-content: space-between; align-items: center; gap: 8px;
+    background: rgba(255,255,255,0.05); border-radius: 8px; padding: 6px 10px; font-size: 13px;
+}
+.mileage-row button { padding: 6px 10px; font-size: 12px; border-radius: 12px; }
+.box-reveal {
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: #15151f; border: 2px solid #ffd23f; border-radius: 18px;
+    padding: 22px 30px; text-align: center; z-index: 30;
+    box-shadow: 0 0 40px rgba(255,210,60,0.45);
+}
+.box-reveal .rv-icon { font-size: 58px; line-height: 1.1; }
+.box-reveal .rv-text { font-weight: bold; margin-top: 8px; color: #ffd23f; white-space: pre-line; }
+.box-reveal.hidden { display: none !important; }
+.box-reveal.show { animation: rvpop 0.45s ease-out; }
+@keyframes rvpop { 0% { transform: translate(-50%,-50%) scale(0.2); opacity: 0; } 60% { transform: translate(-50%,-50%) scale(1.15); opacity: 1; } 100% { transform: translate(-50%,-50%) scale(1); } }
+@keyframes shopshake { 10%,90%{transform:translate(-2px,0);} 20%,80%{transform:translate(4px,0);} 30%,50%,70%{transform:translate(-7px,0);} 40%,60%{transform:translate(7px,0);} }
+.shaking { animation: shopshake 0.5s; }
+.btn-purple {
+    background-color: #8a2be2;
+    box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
+}
+.btn-purple:hover {
+    background-color: #9d4edd;
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(157, 78, 221, 0.6);
+}
+.btn-back {
+    background-color: #444;
+    margin-top: 15px;
+    width: 180px;
+}
+.btn-back:hover { background-color: #666; }
+
+#final-score {
+    font-size: 26px;
+    margin-bottom: 20px;
+    color: #ffcc00;
+    font-weight: bold;
+}
+
+/* Leaderboard Style */
+.ranking-box {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 22px;
+    width: 340px;
+    margin-bottom: 25px;
+}
+.ranking-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffcc00;
+    text-align: center;
+    margin-bottom: 15px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 8px;
+}
+.ranking-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    margin-bottom: 10px;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+.ranking-item.top {
+    color: #ffcc00;
+    font-weight: bold;
+    background: rgba(255, 204, 0, 0.1);
+}
+
+/* Customization Selector Grids */
+.skin-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    max-width: 800px;
+    flex-wrap: wrap;
+}
+.skin-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 12px;
+    width: 160px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+.skin-card.equipped {
+    border-color: #ff3366;
+    background: rgba(255, 51, 102, 0.05);
+}
+.skin-preview-canvas {
+    width: 85px;
+    height: 85px;
+    margin-bottom: 8px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 10px;
+}
+.skin-name {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ddd;
+}
+.btn-equip {
+    padding: 8px 15px;
+    font-size: 13px;
+    width: 100%;
+    background-color: #555;
+    border-radius: 15px;
+    color: #fff;
+}
+.btn-equip.active {
+    background-color: #ff3366;
+    color: #fff;
+}
+
+/* Edit Effect Tabs */
+.edit-layout {
+    width: 90%;
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.edit-section {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 15px;
+}
+.section-title {
+    font-size: 18px;
+    color: #ffcc00;
+    margin-bottom: 10px;
+    font-weight: bold;
+    border-left: 4px solid #ffcc00;
+    padding-left: 8px;
+}
+.grid-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 10px;
+}
+.opt-card {
+    background: rgba(255,255,255,0.05);
+    border: 2px solid transparent;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.opt-card:hover { background: rgba(255,255,255,0.1); }
+.opt-card.selected {
+    border-color: #8a2be2;
+    background: rgba(138, 43, 226, 0.15);
+}
+.opt-preview { font-size: 24px; margin-bottom: 5px; }
+.opt-name { font-size: 13px; font-weight: bold; }
